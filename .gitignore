@@ -1,0 +1,23 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# PyCharm files
+.idea/
+*.iml
+*.iws
+.idea_modules/
+out/
+
+# OS specific
+.DS_Store
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+.venv
