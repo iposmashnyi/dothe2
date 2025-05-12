@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from app.routers import tasks, quadrants
+from app.api.v1 import quadrants, tasks
 
 app = FastAPI()
 app.include_router(tasks.router)
-app.include_router(quadrants.quadrant_router)
+app.include_router(quadrants.router)
 
 
 @app.get("/")

@@ -3,9 +3,9 @@ from typing import List, Dict
 from datetime import datetime
 import uuid
 
-from app.routers.tasks import Task, dict_to_task
-from app.db.mock_data import quadrants_db, tasks_db
-from app.schema.quadrants import QuadrantBase, QuadrantCreate, Quadrant
+from app.api.v1.tasks import Task, dict_to_task
+from app.core.db.mock_data import quadrants_db, tasks_db
+from app.schemas.quadrant import QuadrantBase, QuadrantCreate, Quadrant
 
 router = APIRouter(
     prefix="/quadrants",
@@ -51,14 +51,14 @@ async def toggle_task_completion(
     return dict_to_task(task_dict)
 
 # New router for quadrants (can be in a separate file)
-quadrant_router = APIRouter(
+router = APIRouter(
     prefix="/quadrants",
     tags=["quadrants"],
     responses={404: {"description": "Not found"}}
 )
 
 
-@quadrant_router.get("/", response_model=List[Quadrant])
+@router.get("/", response_model=List[Quadrant])
 async def read_quadrants(include_default: bool = Query(True, description="Include default quadrants")):
     """Get all quadrants."""
     result = quadrants_db.values()
@@ -69,7 +69,7 @@ async def read_quadrants(include_default: bool = Query(True, description="Includ
     return [dict_to_quadrant(q) for q in result]
 
 
-@quadrant_router.get("/{quadrant_id}", response_model=Quadrant)
+@router.get("/{quadrant_id}", response_model=Quadrant)
 async def read_quadrant(quadrant_id: str = Path(..., description="The ID of the quadrant to retrieve")):
     """Get a specific quadrant by ID."""
     if quadrant_id not in quadrants_db:
@@ -78,7 +78,7 @@ async def read_quadrant(quadrant_id: str = Path(..., description="The ID of the 
     return dict_to_quadrant(quadrants_db[quadrant_id])
 
 
-@quadrant_router.post("/", response_model=Quadrant, status_code=201)
+@router.post("/", response_model=Quadrant, status_code=201)
 async def create_quadrant(quadrant: QuadrantCreate):
     """Create a new custom quadrant."""
     quadrant_id = str(uuid.uuid4())
@@ -95,7 +95,7 @@ async def create_quadrant(quadrant: QuadrantCreate):
     return dict_to_quadrant(quadrant_dict)
 
 
-@quadrant_router.put("/{quadrant_id}", response_model=Quadrant)
+@router.put("/{quadrant_id}", response_model=Quadrant)
 async def update_quadrant(
     quadrant_update: QuadrantBase,
     quadrant_id: str = Path(..., description="The ID of the quadrant to update")
@@ -118,7 +118,7 @@ async def update_quadrant(
     return dict_to_quadrant(quadrant_dict)
 
 
-@quadrant_router.delete("/{quadrant_id}", status_code=204)
+@router.delete("/{quadrant_id}", status_code=204)
 async def delete_quadrant(quadrant_id: str = Path(..., description="The ID of the quadrant to delete")):
     """Delete a custom quadrant."""
     if quadrant_id not in quadrants_db:

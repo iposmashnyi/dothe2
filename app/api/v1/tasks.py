@@ -3,8 +3,8 @@ from typing import List, Optional, Dict
 from datetime import datetime
 import uuid
 
-from app.db.mock_data import quadrants_db, tasks_db
-from app.schema.tasks import Task, TaskCreate, TaskUpdate
+from app.core.db.mock_data import quadrants_db, tasks_db
+from app.schemas.task import Task, TaskCreate, TaskUpdate
 
 
 router = APIRouter(
