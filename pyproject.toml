@@ -2,10 +2,13 @@
 name = "dothe2"
 version = "0.1.0"
 description = "Yet another To-do web app"
+authors = ["Ihor Posmashnyi <iposmashnyi@gmail.com>"]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.115.12",
     "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "pytest-mock>=3.14.0",
     "ruff>=0.11.9",
 ]
