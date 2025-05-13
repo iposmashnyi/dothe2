@@ -8,8 +8,10 @@ class QuadrantBase(BaseModel):
     description: Optional[str] = None
     color: Optional[str] = None  # For color-coding in UI
 
+
 class QuadrantCreate(QuadrantBase):
     pass
+
 
 class Quadrant(QuadrantBase):
     id: str

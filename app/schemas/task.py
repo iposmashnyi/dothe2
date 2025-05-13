@@ -10,8 +10,10 @@ class TaskBase(BaseModel):
     quadrant_id: str  # Reference to quadrant by ID
     completed: bool = False
 
+
 class TaskCreate(TaskBase):
     pass
+
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
@@ -19,6 +21,7 @@ class TaskUpdate(BaseModel):
     due_date: Optional[datetime] = None
     quadrant_id: Optional[str] = None
     completed: Optional[bool] = None
+
 
 class Task(TaskBase):
     id: str

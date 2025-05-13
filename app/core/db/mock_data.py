@@ -16,7 +16,7 @@ def create_default_quadrants():
                 "description": "Crisis tasks that need immediate attention",
                 "color": "#ff4d4d",  # Red
                 "is_default": True,
-                "created_at": datetime.now()
+                "created_at": datetime.now(),
             },
             {
                 "id": "q2",
@@ -24,7 +24,7 @@ def create_default_quadrants():
                 "description": "Strategic planning and long-term goals",
                 "color": "#4da6ff",  # Blue
                 "is_default": True,
-                "created_at": datetime.now()
+                "created_at": datetime.now(),
             },
             {
                 "id": "q3",
@@ -32,7 +32,7 @@ def create_default_quadrants():
                 "description": "Interruptions and distractions",
                 "color": "#ffcc00",  # Yellow
                 "is_default": True,
-                "created_at": datetime.now()
+                "created_at": datetime.now(),
             },
             {
                 "id": "q4",
@@ -40,12 +40,13 @@ def create_default_quadrants():
                 "description": "Time wasters",
                 "color": "#b3b3b3",  # Grey
                 "is_default": True,
-                "created_at": datetime.now()
-            }
+                "created_at": datetime.now(),
+            },
         ]
 
         for q in defaults:
             quadrants_db[q["id"]] = q
+
 
 # Call this during startup
 create_default_quadrants()

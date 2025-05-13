@@ -8,10 +8,9 @@ from app.schemas.task import Task, TaskCreate, TaskUpdate
 
 
 router = APIRouter(
-    prefix="/tasks",
-    tags=["tasks"],
-    responses={404: {"description": "Not found"}}
+    prefix="/tasks", tags=["tasks"], responses={404: {"description": "Not found"}}
 )
+
 
 # Helper functions
 def dict_to_task(task_dict: Dict) -> Task:
@@ -30,18 +29,16 @@ async def create_task(task: TaskCreate):
     now = datetime.now()
 
     task_dict = task.model_dump()
-    task_dict.update({
-        "id": task_id,
-        "created_at": now,
-        "updated_at": now
-    })
+    task_dict.update({"id": task_id, "created_at": now, "updated_at": now})
 
     tasks_db[task_id] = task_dict
     return dict_to_task(task_dict)
 
 
 @router.get("/", response_model=List[Task])
-async def read_tasks(quadrant_id: Optional[str] = None, completed: Optional[bool] = None):
+async def read_tasks(
+    quadrant_id: Optional[str] = None, completed: Optional[bool] = None
+):
     """Get all tasks with optional filtering."""
     filtered_tasks = tasks_db.values()
 
@@ -57,7 +54,9 @@ async def read_tasks(quadrant_id: Optional[str] = None, completed: Optional[bool
 
 
 @router.get("/{task_id}", response_model=Task)
-async def read_task(task_id: str = Path(..., description="The ID of the task to retrieve")):
+async def read_task(
+    task_id: str = Path(..., description="The ID of the task to retrieve"),
+):
     """Get a specific task by ID."""
     if task_id not in tasks_db:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -68,7 +67,7 @@ async def read_task(task_id: str = Path(..., description="The ID of the task to 
 @router.put("/{task_id}", response_model=Task)
 async def update_task(
     task_update: TaskUpdate,
-    task_id: str = Path(..., description="The ID of the task to update")
+    task_id: str = Path(..., description="The ID of the task to update"),
 ):
     """Update a task's details."""
     if task_id not in tasks_db:
@@ -97,7 +96,9 @@ async def update_task(
 
 
 @router.delete("/{task_id}", status_code=204)
-async def delete_task(task_id: str = Path(..., description="The ID of the task to delete")):
+async def delete_task(
+    task_id: str = Path(..., description="The ID of the task to delete"),
+):
     """Delete a task."""
     if task_id not in tasks_db:
         raise HTTPException(status_code=404, detail="Task not found")
