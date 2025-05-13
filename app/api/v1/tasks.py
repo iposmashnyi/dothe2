@@ -40,7 +40,7 @@ async def read_tasks(
     quadrant_id: Optional[str] = None, completed: Optional[bool] = None
 ):
     """Get all tasks with optional filtering."""
-    filtered_tasks = tasks_db.values()
+    filtered_tasks = list(tasks_db.values())
 
     if quadrant_id:
         if quadrant_id not in quadrants_db:

@@ -66,7 +66,7 @@ async def read_quadrants(
     include_default: bool = Query(True, description="Include default quadrants"),
 ):
     """Get all quadrants."""
-    result = quadrants_db.values()
+    result = list(quadrants_db.values())
 
     if not include_default:
         result = [q for q in result if not q["is_default"]]
