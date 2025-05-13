@@ -1,9 +1,8 @@
-from typing import Dict
 from datetime import datetime
 
 # In-memory database
-tasks_db: Dict[str, Dict] = {}
-quadrants_db: Dict[str, Dict] = {}
+tasks_db: dict[str, dict] = {}
+quadrants_db: dict[str, dict] = {}
 
 
 # Initialize default quadrants

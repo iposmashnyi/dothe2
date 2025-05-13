@@ -1,12 +1,12 @@
-from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class QuadrantBase(BaseModel):
     name: str
-    description: Optional[str] = None
-    color: Optional[str] = None  # For color-coding in UI
+    description: str | None = None
+    color: str | None = None  # For color-coding in UI
 
 
 class QuadrantCreate(QuadrantBase):

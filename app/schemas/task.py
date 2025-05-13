@@ -1,12 +1,12 @@
-from pydantic import BaseModel
-from typing import Optional
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class TaskBase(BaseModel):
     title: str
-    description: Optional[str] = None
-    due_date: Optional[datetime] = None
+    description: str | None = None
+    due_date: datetime | None = None
     quadrant_id: str  # Reference to quadrant by ID
     completed: bool = False
 
@@ -16,11 +16,11 @@ class TaskCreate(TaskBase):
 
 
 class TaskUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    due_date: Optional[datetime] = None
-    quadrant_id: Optional[str] = None
-    completed: Optional[bool] = None
+    title: str | None = None
+    description: str | None = None
+    due_date: datetime | None = None
+    quadrant_id: str | None = None
+    completed: bool | None = None
 
 
 class Task(TaskBase):

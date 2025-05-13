@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Body, Path, Query
-from typing import List, Dict
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from fastapi import APIRouter, Body, HTTPException, Path, Query
 
 from app.api.v1.tasks import Task, dict_to_task
 from app.core.db.mock_data import quadrants_db, tasks_db
-from app.schemas.quadrant import QuadrantBase, QuadrantCreate, Quadrant
+from app.schemas.quadrant import Quadrant, QuadrantBase, QuadrantCreate
 
 router = APIRouter(
     prefix="/quadrants",
@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-def dict_to_quadrant(quadrant_dict: Dict) -> Quadrant:
+def dict_to_quadrant(quadrant_dict: dict) -> Quadrant:
     return Quadrant(**quadrant_dict)
 
 
@@ -61,7 +61,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[Quadrant])
+@router.get("/", response_model=list[Quadrant])
 async def read_quadrants(
     include_default: bool = Query(True, description="Include default quadrants"),
 ):
@@ -136,9 +136,7 @@ async def delete_quadrant(
         raise HTTPException(status_code=403, detail="Cannot delete default quadrant")
 
     # Check if any tasks are using this quadrant
-    tasks_with_quadrant = [
-        t for t in tasks_db.values() if t["quadrant_id"] == quadrant_id
-    ]
+    tasks_with_quadrant = [t for t in tasks_db.values() if t["quadrant_id"] == quadrant_id]
     if tasks_with_quadrant:
         raise HTTPException(
             status_code=400,

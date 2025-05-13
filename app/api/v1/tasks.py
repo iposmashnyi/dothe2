@@ -1,19 +1,16 @@
-from fastapi import APIRouter, HTTPException, Path
-from typing import List, Optional, Dict
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from fastapi import APIRouter, HTTPException, Path
 
 from app.core.db.mock_data import quadrants_db, tasks_db
 from app.schemas.task import Task, TaskCreate, TaskUpdate
 
-
-router = APIRouter(
-    prefix="/tasks", tags=["tasks"], responses={404: {"description": "Not found"}}
-)
+router = APIRouter(prefix="/tasks", tags=["tasks"], responses={404: {"description": "Not found"}})
 
 
 # Helper functions
-def dict_to_task(task_dict: Dict) -> Task:
+def dict_to_task(task_dict: dict) -> Task:
     return Task(**task_dict)
 
 
@@ -35,10 +32,8 @@ async def create_task(task: TaskCreate):
     return dict_to_task(task_dict)
 
 
-@router.get("/", response_model=List[Task])
-async def read_tasks(
-    quadrant_id: Optional[str] = None, completed: Optional[bool] = None
-):
+@router.get("/", response_model=list[Task])
+async def read_tasks(quadrant_id: str | None = None, completed: bool | None = None):
     """Get all tasks with optional filtering."""
     filtered_tasks = list(tasks_db.values())
 

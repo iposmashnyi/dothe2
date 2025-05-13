@@ -6,9 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID
 
 
 class UUIDMixin:
-    uuid: uuid.UUID = Column(
-        UUID, primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()")
-    )
+    uuid: uuid.UUID = Column(UUID, primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"))
 
 
 class TimestampMixin:
