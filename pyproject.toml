@@ -19,7 +19,9 @@ dependencies = [
 target-version = "py313"
 line-length = 120
 fix = true
-lint.select = [
+
+[tool.ruff.lint]
+select = [
     # https://docs.astral.sh/ruff/rules/#pyflakes-f
     "F", # Pyflakes
     # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
@@ -33,15 +35,15 @@ lint.select = [
     # https://docs.astral.sh/ruff/rules/#isort-i
     "I", # isort
 ]
-lint.ignore = [
+ignore = [
     # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
     "E402", # module level import not at top of file
     # https://docs.astral.sh/ruff/rules/#pyupgrade-up
     "E741",  # Ambiguous variable name
 ]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 24
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "pep257"
