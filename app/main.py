@@ -1,12 +1,6 @@
-from fastapi import FastAPI
+from app.api import router
 
-from app.api.v1 import quadrants, tasks
+from .core.config import settings
+from .core.setup import create_application
 
-app = FastAPI()
-app.include_router(tasks.router)
-app.include_router(quadrants.router)
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello from Dothe2!"}
+app = create_application(router=router, settings=settings)
