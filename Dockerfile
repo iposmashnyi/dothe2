@@ -1,6 +1,6 @@
 # --------- requirements ---------
 
-FROM python:3.13 as requirements-stage
+FROM python:3.13 AS requirements-stage
 
 WORKDIR /tmp
 
@@ -8,7 +8,7 @@ RUN pip install uv
 
 COPY ./pyproject.toml ./uv.lock* /tmp/
 
-RUN uv export --format requirements.txt --output requirements.txt --no-hashes
+RUN uv export --no-hashes --format requirements-txt > requirements.txt
 
 
 FROM python:3.13

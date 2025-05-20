@@ -21,3 +21,5 @@ env/
 ENV/
 .env
 .venv
+
+app/.env
