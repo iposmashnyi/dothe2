@@ -6,6 +6,7 @@ authors = ["Ihor Posmashnyi <iposmashnyi@gmail.com>"]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.16.1",
     "fastapi[standard]>=0.115.12",
     "mypy>=1.15.0",
     "pydantic-settings>=2.9.1",
@@ -37,7 +38,7 @@ select = [
 ]
 ignore = [
     # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
-    "E402", # module level import not at top of file
+    "E402", # module level import not at top of a file
     # https://docs.astral.sh/ruff/rules/#pyupgrade-up
     "E741",  # Ambiguous variable name
 ]
