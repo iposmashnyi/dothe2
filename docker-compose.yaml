@@ -15,10 +15,11 @@ services:
     #   - "8000"
     depends_on:
       - db
-      - redis
     volumes:
       - ./app:/code/app
-      - ./app/.env:/code/.env
+      - ./migrations:/code/migrations
+      - ./alembic.ini:/code/alembic.ini
+      - ./app/.env:/code/app/.env
 
 
   db:
@@ -27,10 +28,8 @@ services:
       - ./app/.env
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    expose:
-      - "5432"
-    # ports:
-    #  - 5432:5432
+    ports:
+      - "5432:5432"
 
 
   pgadmin:
