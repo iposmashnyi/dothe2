@@ -22,4 +22,4 @@ ENV/
 .env
 .venv
 
-app/.env
+src/.env
