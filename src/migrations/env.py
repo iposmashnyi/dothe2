@@ -34,9 +34,8 @@ def import_models(package_name):
         importlib.import_module(module_name)
 
 
-# Import models directly to ensure they're registered
-from app.core.db.models import Quadrant, Task  # noqa: F401
-
+# Load all models dynamically
+import_models("app.models")
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
