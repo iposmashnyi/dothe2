@@ -14,7 +14,7 @@ class QuadrantCreate(QuadrantBase):
 
 
 class Quadrant(QuadrantBase):
-    id: str
+    id: int
     created_at: datetime
     is_default: bool = False
 
