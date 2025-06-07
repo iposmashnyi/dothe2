@@ -1,102 +1,77 @@
-import uuid
-from datetime import datetime
+from fastapi import APIRouter, HTTPException, Path, Query
 
-from fastapi import APIRouter, HTTPException, Path
-
-from app.core.db.mock_data import quadrants_db, tasks_db
+from app.api.dependencies import DatabaseDep
+from app.crud import quadrants as quadrant_crud
+from app.crud import tasks as task_crud
 from app.schemas.task import Task, TaskCreate, TaskUpdate
 
 router = APIRouter(prefix="/tasks", tags=["tasks"], responses={404: {"description": "Not found"}})
 
 
-# Helper functions
-def dict_to_task(task_dict: dict) -> Task:
-    return Task(**task_dict)
-
-
-# Task API Endpoints
 @router.post("/", response_model=Task, status_code=201)
-async def create_task(task: TaskCreate):
+async def create_task(db: DatabaseDep, task: TaskCreate):
     """Create a new task."""
     # Validate quadrant_id exists
-    if task.quadrant_id not in quadrants_db:
+    quadrant = await quadrant_crud.get_quadrant_by_id(db, int(task.quadrant_id))
+    if not quadrant:
         raise HTTPException(status_code=400, detail="Invalid quadrant ID")
 
-    task_id = str(uuid.uuid4())
-    now = datetime.now()
-
-    task_dict = task.model_dump()
-    task_dict.update({"id": task_id, "created_at": now, "updated_at": now})
-
-    tasks_db[task_id] = task_dict
-    return dict_to_task(task_dict)
+    return await task_crud.create_task(db, task)
 
 
 @router.get("/", response_model=list[Task])
-async def read_tasks(quadrant_id: str | None = None, completed: bool | None = None):
+async def read_tasks(
+    db: DatabaseDep,
+    quadrant_id: int | None = Query(None, description="Filter by quadrant ID"),
+    completed: bool | None = Query(None, description="Filter by completion status"),
+):
     """Get all tasks with optional filtering."""
-    filtered_tasks = list(tasks_db.values())
-
+    # Validate quadrant_id if provided
     if quadrant_id:
-        if quadrant_id not in quadrants_db:
+        quadrant = await quadrant_crud.get_quadrant_by_id(db, quadrant_id)
+        if not quadrant:
             raise HTTPException(status_code=400, detail="Invalid quadrant ID")
-        filtered_tasks = [t for t in filtered_tasks if t["quadrant_id"] == quadrant_id]
 
-    if completed is not None:
-        filtered_tasks = [t for t in filtered_tasks if t["completed"] == completed]
-
-    return [dict_to_task(task) for task in filtered_tasks]
+    return await task_crud.get_tasks(db, quadrant_id=quadrant_id, completed=completed)
 
 
 @router.get("/{task_id}", response_model=Task)
 async def read_task(
-    task_id: str = Path(..., description="The ID of the task to retrieve"),
+    db: DatabaseDep,
+    task_id: int = Path(..., description="The ID of the task to retrieve"),
 ):
     """Get a specific task by ID."""
-    if task_id not in tasks_db:
+    task = await task_crud.get_task_by_id(db, task_id)
+    if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-
-    return dict_to_task(tasks_db[task_id])
+    return task
 
 
 @router.put("/{task_id}", response_model=Task)
 async def update_task(
+    db: DatabaseDep,
     task_update: TaskUpdate,
-    task_id: str = Path(..., description="The ID of the task to update"),
+    task_id: int = Path(..., description="The ID of the task to update"),
 ):
     """Update a task's details."""
-    if task_id not in tasks_db:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    # Get existing task
-    task_dict = tasks_db[task_id]
-
-    # Update only fields that are provided
-    update_data = task_update.model_dump(exclude_unset=True)
-
     # Validate quadrant_id if it's being updated
-    if "quadrant_id" in update_data and update_data["quadrant_id"] not in quadrants_db:
-        raise HTTPException(status_code=400, detail="Invalid quadrant ID")
+    if task_update.quadrant_id:
+        quadrant = await quadrant_crud.get_quadrant_by_id(db, int(task_update.quadrant_id))
+        if not quadrant:
+            raise HTTPException(status_code=400, detail="Invalid quadrant ID")
 
-    for key, value in update_data.items():
-        task_dict[key] = value
-
-    # Update the updated_at timestamp
-    task_dict["updated_at"] = datetime.now()
-
-    # Save back to DB
-    tasks_db[task_id] = task_dict
-
-    return dict_to_task(task_dict)
+    task = await task_crud.update_task(db, task_id, task_update)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
 
 
 @router.delete("/{task_id}", status_code=204)
 async def delete_task(
-    task_id: str = Path(..., description="The ID of the task to delete"),
+    db: DatabaseDep,
+    task_id: int = Path(..., description="The ID of the task to delete"),
 ):
     """Delete a task."""
-    if task_id not in tasks_db:
+    success = await task_crud.delete_task(db, task_id)
+    if not success:
         raise HTTPException(status_code=404, detail="Task not found")
-
-    del tasks_db[task_id]
-    return None
