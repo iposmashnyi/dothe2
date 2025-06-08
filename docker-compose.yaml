@@ -43,6 +43,19 @@ services:
      depends_on:
        - db
 
+
+  populate_quadrants:
+     build:
+       context: .
+       dockerfile: Dockerfile
+     env_file:
+       - ./src/.env
+     depends_on:
+       - db
+     command: python -m src.scripts.populate_quadrants
+     volumes:
+       - ./src:/code/src
+
 volumes:
   postgres-data:
   pgadmin-data:
