@@ -1,16 +1,21 @@
-from datetime import UTC, datetime
+from __future__ import annotations
 
-from sqlalchemy import DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import TYPE_CHECKING
 
-from ..core.db.database import Base
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.core.db.database import Base
+from app.core.db.mixins import TimestampMixin
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
-class Tier(Base):
+class Tier(Base, TimestampMixin):
     __tablename__ = "tier"
 
-    id: Mapped[int] = mapped_column("id", autoincrement=True, nullable=False, unique=True, primary_key=True, init=False)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
 
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default_factory=lambda: datetime.now(UTC))
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), default=None)
+    users: Mapped[list[User]] = relationship("User", back_populates="tier")
