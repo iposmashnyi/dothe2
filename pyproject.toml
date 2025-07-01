@@ -11,12 +11,16 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "greenlet>=3.2.2",
     "idna>=3.10",
-    "mypy>=1.15.0",
     "pydantic-settings>=2.9.1",
+    "sqlalchemy>=2.0.40",
+]
+
+[dependency-groups]
+dev = [
     "pytest>=8.3.5",
     "pytest-mock>=3.14.0",
+    "mypy>=1.15.0",
     "ruff>=0.11.9",
-    "sqlalchemy>=2.0.40",
 ]
 
 [tool.ruff]
