@@ -44,10 +44,31 @@ class EnvironmentSettings(BaseSettings):
     ENVIRONMENT: EnvironmentOption = config("ENVIRONMENT", default="local")
 
 
+class EmailSettings(BaseSettings):
+    EMAIL_HOST: str = config("EMAIL_HOST", default="smtp.gmail.com")
+    EMAIL_PORT: int = config("EMAIL_PORT", default=587)
+    EMAIL_USERNAME: str = config("EMAIL_USERNAME", default="")
+    EMAIL_PASSWORD: str = config("EMAIL_PASSWORD", default="")
+    EMAIL_FROM_ADDRESS: str = config("EMAIL_FROM_ADDRESS", default="noreply@dothe2.app")
+    EMAIL_FROM_NAME: str = config("EMAIL_FROM_NAME", default="Dothe2")
+    EMAIL_USE_TLS: bool = config("EMAIL_USE_TLS", default=True)
+    EMAIL_USE_SSL: bool = config("EMAIL_USE_SSL", default=False)
+
+
+class AuthSettings(BaseSettings):
+    SECRET_KEY: str = config("SECRET_KEY", default="your-secret-key-here-change-in-production")
+    ALGORITHM: str = config("ALGORITHM", default="HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = config("ACCESS_TOKEN_EXPIRE_MINUTES", default=60 * 24 * 7)  # 7 days
+    MAGIC_LINK_EXPIRE_MINUTES: int = config("MAGIC_LINK_EXPIRE_MINUTES", default=15)
+    BASE_URL: str = config("BASE_URL", default="http://localhost:8000")
+
+
 class Settings(
     AppSettings,
     PostgresSettings,
     EnvironmentSettings,
+    EmailSettings,
+    AuthSettings,
 ):
     pass
 
