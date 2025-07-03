@@ -5,7 +5,7 @@ from app.crud import quadrants as quadrant_crud
 from app.crud import tasks as task_crud
 from app.schemas.task import Task, TaskCreate, TaskUpdate
 
-router = APIRouter(prefix="/tasks", tags=["tasks"], responses={404: {"description": "Not found"}})
+router = APIRouter(prefix="/tasks", tags=["Tasks"], responses={404: {"description": "Not found"}})
 
 
 @router.post("/", response_model=Task, status_code=201)

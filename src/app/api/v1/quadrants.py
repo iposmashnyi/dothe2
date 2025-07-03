@@ -8,7 +8,7 @@ from app.schemas.task import Task
 
 router = APIRouter(
     prefix="/quadrants",
-    tags=["quadrants"],
+    tags=["Quadrants"],
     responses={404: {"description": "Not found"}},
 )
 
