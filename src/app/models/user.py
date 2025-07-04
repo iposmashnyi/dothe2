@@ -10,6 +10,7 @@ from app.core.db.database import Base
 from app.core.db.mixins import SoftDeleteMixin, TimestampMixin
 
 if TYPE_CHECKING:
+    from app.models.auth_token import AuthToken
     from app.models.tier import Tier
 
 
@@ -21,7 +22,6 @@ class User(Base, SoftDeleteMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(30))
     username: Mapped[str] = mapped_column(String(20), unique=True, index=True)
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(String)
 
     profile_image_url: Mapped[str] = mapped_column(String, default="")
     uuid: Mapped[uuid_pkg.UUID] = mapped_column(default=uuid_pkg.uuid4, unique=True)
@@ -29,3 +29,6 @@ class User(Base, SoftDeleteMixin, TimestampMixin):
     tier_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("tier.id"), index=True, default=None)
 
     tier: Mapped[Tier | None] = relationship("Tier", back_populates="users")
+    auth_tokens: Mapped[list[AuthToken]] = relationship(
+        "AuthToken", back_populates="user", cascade="all, delete-orphan"
+    )
